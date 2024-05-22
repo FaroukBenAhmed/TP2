@@ -46,4 +46,32 @@ a = (math.sin(delta_phi / 2) ** 2 +
 math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         return r * c
+  @staticmethod
+    def trouverDistanceMin(fichier_json):
+        if not os.path.exists(fichier_json):
+            print(f"Erreur : le fichier {fichier_json} n'existe pas.")
+            return
+
+        with open(fichier_json, 'r', encoding='utf-8') as jsonfile:
+            villes = json.load(jsonfile)
+
+        min_distance = float('inf')
+        ville1 = ville2 = None
+
+        for i in range(len(villes)):
+            for j in range(i + 1, len(villes)):
+                d = DonneesGeo.calculer_distance(villes[i]['latitude'], villes[i]['longitude'],
+                                                 villes[j]['latitude'], villes[j]['longitude'])
+                if d < min_distance:
+                    min_distance = d
+                    ville1, ville2 = villes[i], villes[j]
+
+        print(
+            f"Distance minimale en kilomètres entre 2 villes : Ville 1 : {ville1['ville']} {ville1['pays']} {ville1['latitude']} {ville1['longitude']} et Ville 2 : {ville2['ville']} {ville2['pays']} {ville2['latitude']} {ville2['longitude']} Distance en kilomètres : {min_distance}")
+
+        with open('distances.csv', 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['ville1', 'ville2', 'distance']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow({'ville1': ville1['ville'], 'ville2': ville2['ville'], 'distance': min_distance})
 
