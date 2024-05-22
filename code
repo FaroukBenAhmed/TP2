@@ -1,5 +1,13 @@
-hello 
-tu vois ce que j'écris?
-salut
-la g compris c bon cest comme sa
-bvhkjv
+import csv
+import json
+import math
+import os
+Class DonneesGeo:
+  def __init__(self, ville, pays, latitude, longitude):
+    self.ville = str(ville)
+    self.pays = str(pays)
+    self.latitude = float(latitude)
+    self.longitude = float(longitude)
+
+  def __str__(self):
+    return f"{self.ville}, {self.pays}, {self.latitude}, {self.longitude}"
