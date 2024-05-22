@@ -29,4 +29,21 @@ def lireDonneesCsv(nomFichier):
     return donnees
 
 @staticmethod
+def ecrireDonneesJson(fichier_json, liste_obj_donnees_geo):
+liste_dicts = [obj.__dict__ for obj in  liste_obj_donnees_geo]
+  with open(fichier_json, 'W', encoding='utf-8') as jsonfile:
+    json.dump(liste_dicts, jsonfile, ensure_ascii=False indent=4)
+
+@staticmethod
+def calculer_distance(lat1, lon1, lat2 lon2):
+  r = 6371 #Rayon de la terre en KM
+  phi1 = math.radians(lat1)
+  phi2 = math.radians(lat2)
+  delta_phi = math.radians(lat2 - lat1)
+  delta_lambda = math.radians(lon2 - lon1)
+
+a = (math.sin(delta_phi / 2) ** 2 +
+math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2)
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        return r * c
 
