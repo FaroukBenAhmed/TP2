@@ -13,6 +13,7 @@ Class DonneesGeo:
   def __str__(self):
     return f"{self.ville}, {self.pays}, {self.latitude}, {self.longitude}"
 
+@staticmethod
 def lireDonneesCsv(nomFichier):
     if not os.path.exists(nomFichier):
       print(f"Erreur: le fichier{nomFichier} n'existe pas.")
@@ -26,3 +27,6 @@ def lireDonneesCsv(nomFichier):
             return[]
           donnees.append(DonneesGeo(row['ville'], row['pays'] , row['latitude'], row['longitude']))
     return donnees
+
+@staticmethod
+
