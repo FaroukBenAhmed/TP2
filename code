@@ -1,52 +1,55 @@
-#Farouk Ben Ahmed and Ahmed Riad Bennabi	
 import csv
 import json
 import math
 import os
-Class DonneesGeo:
-  def __init__(self, ville, pays, latitude, longitude):
-    self.ville = str(ville)
-    self.pays = str(pays)
-    self.latitude = float(latitude)
-    self.longitude = float(longitude)
 
-  def __str__(self):
-    return f"{self.ville}, {self.pays}, {self.latitude}, {self.longitude}"
 
-@staticmethod
-def lireDonneesCsv(nomFichier):
-    if not os.path.exists(nomFichier):
-      print(f"Erreur: le fichier{nomFichier} n'existe pas.")
-      return[]
-    donnees = []
-    with open(nomFichier,'r', newline=",encoding='uft-8') as csvfile:
-      reader = csv.DictReader(csvfile)
-      for row in reader:
-        if 'ville' not in row or 'pays' not in row or 'latitude' not in row or 'longitude' not in row:
-            print(f"Erreur: le fichier CSV doit contenir les colonnes 'ville','pays','latitude' et 'longitude'."
-            return[]
-          donnees.append(DonneesGeo(row['ville'], row['pays'] , row['latitude'], row['longitude']))
-    return donnees
+class DonneesGeo:
+    def __init__(self, ville, pays, latitude, longitude):
+        self.ville = str(ville)
+        self.pays = str(pays)
+        self.latitude = float(latitude)
+        self.longitude = float(longitude)
 
-@staticmethod
-def ecrireDonneesJson(fichier_json, liste_obj_donnees_geo):
-liste_dicts = [obj.__dict__ for obj in  liste_obj_donnees_geo]
-  with open(fichier_json, 'W', encoding='utf-8') as jsonfile:
-    json.dump(liste_dicts, jsonfile, ensure_ascii=False indent=4)
+    def __str__(self):
+        return f"{self.ville}, {self.pays}, {self.latitude}, {self.longitude}"
 
-@staticmethod
-def calculer_distance(lat1, lon1, lat2 lon2):
-  r = 6371 #Rayon de la terre en KM
-  phi1 = math.radians(lat1)
-  phi2 = math.radians(lat2)
-  delta_phi = math.radians(lat2 - lat1)
-  delta_lambda = math.radians(lon2 - lon1)
+    @staticmethod
+    def lireDonneesCsv(nomFichier):
+        if not os.path.exists(nomFichier):
+            print(f"Erreur : le fichier {nomFichier} n'existe pas.")
+            return []
 
-a = (math.sin(delta_phi / 2) ** 2 +
-math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2)
+        donnees = []
+        with open(nomFichier, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if 'ville' not in row or 'pays' not in row or 'latitude' not in row or 'longitude' not in row:
+                    print(f"Erreur : le fichier CSV doit contenir les colonnes 'ville', 'pays', 'latitude' et 'longitude'.")
+                    return []
+                donnees.append(DonneesGeo(row['ville'], row['pays'], row['latitude'], row['longitude']))
+        return donnees
+
+    @staticmethod
+    def ecrireDonneesJson(fichier_json, liste_obj_donnees_geo):
+        liste_dicts = [obj.__dict__ for obj in liste_obj_donnees_geo]
+        with open(fichier_json, 'w', encoding='utf-8') as jsonfile:
+            json.dump(liste_dicts, jsonfile, ensure_ascii=False, indent=4)
+
+    @staticmethod
+    def calculer_distance(lat1, lon1, lat2, lon2):
+        r = 6371  # Rayon de la Terre en kilomètres
+        phi1 = math.radians(lat1)
+        phi2 = math.radians(lat2)
+        delta_phi = math.radians(lat2 - lat1)
+        delta_lambda = math.radians(lon2 - lon1)
+
+        a = (math.sin(delta_phi / 2) ** 2 +
+             math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         return r * c
-  @staticmethod
+
+    @staticmethod
     def trouverDistanceMin(fichier_json):
         if not os.path.exists(fichier_json):
             print(f"Erreur : le fichier {fichier_json} n'existe pas.")
@@ -74,6 +77,7 @@ math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2) ** 2)
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow({'ville1': ville1['ville'], 'ville2': ville2['ville'], 'distance': min_distance})
+
 
 def affichermenu():
     print("1- Lire les données du fichier csv, créer les objets et afficher les données.")
@@ -110,5 +114,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
